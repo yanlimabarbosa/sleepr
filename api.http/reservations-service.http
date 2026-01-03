@@ -1,8 +1,5 @@
 @reservationsServiceUrl = http://localhost:3000
-@reservationId = 6958b2736dca76d65df427c3
-
-### Get root endpoint
-GET {{reservationsServiceUrl}}/
+@reservationId = 69597fc3600b1be607bc0524
 
 ### Create reservation
 POST {{reservationsServiceUrl}}/reservations

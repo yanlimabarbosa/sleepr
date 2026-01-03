@@ -1,0 +1,9 @@
+@authServiceUrl = http://localhost:3001
+### Create user
+POST {{authServiceUrl}}/users
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Test1234!"
+}

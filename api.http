@@ -1,4 +1,36 @@
 @baseUrl = http://localhost:3000
+@reservationId = 6958b2736dca76d65df427c1
 
 ### Get root endpoint
 GET {{baseUrl}}/
+
+### Create reservation
+POST {{baseUrl}}/reservations
+Content-Type: application/json
+
+{
+  "startDate": "2026-01-01T00:00:00.000Z",
+  "endDate": "2026-01-02T00:00:00.000Z",
+  "placeId": "123",
+  "invoiceId": "123"
+}
+
+### Get all reservations
+GET {{baseUrl}}/reservations
+
+### Get reservation by id
+GET {{baseUrl}}/reservations/{{reservationId}}
+
+### Update reservation
+PATCH http://localhost:3000/reservations/{{reservationId}}
+Content-Type: application/json
+
+{
+  "startDate": "2026-01-03T00:00:00.000Z",
+  "endDate": "2026-01-04T00:00:00.000Z",
+  "placeId": "333",
+  "invoiceId": "333"
+}
+
+### Delete reservation
+DELETE http://localhost:3000/reservations/{{reservationId}}

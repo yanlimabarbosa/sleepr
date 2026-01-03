@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@reservationId = 6958b2736dca76d65df427c1
+@reservationId = 6958b2736dca76d65df427c3
 
 ### Get root endpoint
 GET {{baseUrl}}/
@@ -9,8 +9,8 @@ POST {{baseUrl}}/reservations
 Content-Type: application/json
 
 {
-  "startDate": "2026-01-01T00:00:00.000Z",
-  "endDate": "2026-01-02T00:00:00.000Z",
+  "startDate": "12-25-2025",
+  "endDate": "12-26-2025",
   "placeId": "123",
   "invoiceId": "123"
 }

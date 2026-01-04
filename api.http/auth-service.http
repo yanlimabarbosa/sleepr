@@ -1,4 +1,5 @@
 @authServiceUrl = http://localhost:3001
+
 ### Create user
 POST {{authServiceUrl}}/users
 Content-Type: application/json
@@ -8,7 +9,8 @@ Content-Type: application/json
   "password": "Test1234!"
 }
 
-### Login
+
+### Login (sets cookie automatically)
 POST {{authServiceUrl}}/auth/login
 Content-Type: application/json
 
@@ -16,3 +18,7 @@ Content-Type: application/json
   "email": "test@test.com",
   "password": "Test1234!"
 }
+
+
+### Get user (cookie is automatically sent from login)
+GET {{authServiceUrl}}/users

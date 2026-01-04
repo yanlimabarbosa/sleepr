@@ -7,3 +7,12 @@ Content-Type: application/json
   "email": "test@test.com",
   "password": "Test1234!"
 }
+
+### Login
+POST {{authServiceUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Test1234!"
+}

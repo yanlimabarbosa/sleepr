@@ -7,6 +7,8 @@ import { ReservationDocument, ReservationSchema } from './reservations/models/re
 import { LoggerModule } from '@app/common/logger';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AUTH_SERVICE } from '@app/common/constants';
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import Joi from 'joi';
         PORT: Joi.number().required(),
       }),
     }),
+    ClientsModule.register([
+      { name: AUTH_SERVICE, transport: Transport.TCP }
+    ])
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService, ReservationRepository],

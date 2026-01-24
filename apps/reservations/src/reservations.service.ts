@@ -7,8 +7,8 @@ import { ReservationRepository } from './reservation.repository';
 export class ReservationsService {
   constructor(private readonly reservationRepository: ReservationRepository) { }
 
-  create(createReservationDto: CreateReservationDto) {
-    return this.reservationRepository.create({ ...createReservationDto, timestamp: new Date(), userId: '123' });
+  create(createReservationDto: CreateReservationDto, userId: string) {
+    return this.reservationRepository.create({ ...createReservationDto, timestamp: new Date(), userId });
   }
 
   findAll() {

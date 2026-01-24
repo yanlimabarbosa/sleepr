@@ -5,7 +5,7 @@ POST {{authServiceUrl}}/users
 Content-Type: application/json
 
 {
-  "email": "testTt@test.com",
+  "email": "test@test.com",
   "password": "Test1234!"
 }
 

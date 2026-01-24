@@ -4,7 +4,8 @@
 ### Create reservation
 POST {{reservationsServiceUrl}}/reservations
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTVhZTMzNzRiMzgwZTE5NDJmMmI1MmEiLCJpYXQiOjE3Njc5MTA1MDUsImV4cCI6MTc2NzkxNDEwNX0.q9OhfFLt5feqJaEi7fKaJslgJPXSWQ95KOdWZN-vNWk
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTVhZTMzNzRiMzgwZTE5NDJmMmI1MmEiLCJpYXQiOjE3Njc5MTA1MDUsImV4cCI6MTc2NzkxNDEwNX0.q9OhfFLt5feqJaEi7fKaJslgJPXSWQ95KOdWZN-vNWk
+Cookie: Authentication=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc1MzY2MDg5NTg5YWJiY2NkZWU1YTMiLCJpYXQiOjE3NjkyODkzMzAsImV4cCI6MTc2OTI5MjkzMH0.5y6ahBqMeCRZkAKzKtcoNL1cbYUAYZr5lzyOXfcHNvw
 
 {
   "startDate": "12-25-2025",

@@ -1,0 +1,33 @@
+@host = http://localhost:3000
+@id = 6a764084aef999ea0327305c
+
+### Create reservation
+POST {{host}}/reservations
+Content-Type: application/json
+
+{
+  "startDate": "12/20/2022",
+  "endDate": "12/25/2022",
+  "placeId": "12345",
+  "invoiceId": "493"
+}
+
+### Get all reservations
+GET {{host}}/reservations
+
+
+### Get one reservation
+GET {{host}}/reservations/{{id}}
+
+
+### Update reservation
+PATCH {{host}}/reservations/{{id}}
+Content-Type: application/json
+
+{
+  "placeId": "67890"
+}
+
+
+### Delete reservation
+DELETE {{host}}/reservations/{{id}}

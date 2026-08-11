@@ -6,6 +6,9 @@
 # local database data
 /data
 
+# pnpm store (created by container installs)
+/.pnpm-store
+
 # Logs
 logs
 *.log

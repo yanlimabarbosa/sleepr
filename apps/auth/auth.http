@@ -1,6 +1,6 @@
 @host = http://localhost:3001
 
-### Create user
+### 1. Create user
 POST {{host}}/users
 Content-Type: application/json
 
@@ -9,5 +9,16 @@ Content-Type: application/json
   "password": "StrongP@ss1"
 }
 
-### Hello (health placeholder)
-GET {{host}}/
+### 2. Login (sets the Authentication cookie)
+# @name login
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "StrongP@ss1"
+}
+
+### 3. Get current user (protected — JwtAuthGuard)
+# REST Client auto-sends the cookie stored from the login response above.
+GET {{host}}/users

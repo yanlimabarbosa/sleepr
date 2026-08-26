@@ -1,9 +1,12 @@
 @host = http://localhost:3000
 @id = 6a764084aef999ea0327305c
+# paste the Authentication token from the auth login response here:
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YThkY2JkMzQxY2ZiMTE4YTFiZDU3NTIiLCJpYXQiOjE3ODc3MDEyMjEsImV4cCI6MTc4NzcwNDgyMX0.s30Anzd67Nzx2Gv3KBu7Ek29yzAPlx_bsXdG2Gc0QLk
 
 ### Create reservation
 POST {{host}}/reservations
 Content-Type: application/json
+Cookie: Authentication={{token}}
 
 {
   "startDate": "12/20/2022",
@@ -15,10 +18,8 @@ Content-Type: application/json
 ### Get all reservations
 GET {{host}}/reservations
 
-
 ### Get one reservation
 GET {{host}}/reservations/{{id}}
-
 
 ### Update reservation
 PATCH {{host}}/reservations/{{id}}
@@ -27,7 +28,6 @@ Content-Type: application/json
 {
   "placeId": "67890"
 }
-
 
 ### Delete reservation
 DELETE {{host}}/reservations/{{id}}

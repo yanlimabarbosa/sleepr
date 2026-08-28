@@ -7,7 +7,7 @@ import {
 import { map, Observable, tap } from 'rxjs';
 import { AUTH_SERVICE } from '../constants/services';
 import { ClientProxy } from '@nestjs/microservices';
-import { UserDto } from '../dto/user.dto';
+import { UserDto } from '../dto';
 
 interface RequestWithCookies {
   cookies?: { Authentication?: string };

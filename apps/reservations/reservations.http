@@ -1,7 +1,7 @@
 @host = http://localhost:3000
 @id = 6a764084aef999ea0327305c
 # paste the Authentication token from the auth login response here:
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YThkY2JkMzQxY2ZiMTE4YTFiZDU3NTIiLCJpYXQiOjE3ODc3MDEyMjEsImV4cCI6MTc4NzcwNDgyMX0.s30Anzd67Nzx2Gv3KBu7Ek29yzAPlx_bsXdG2Gc0QLk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YThkY2JkMzQxY2ZiMTE4YTFiZDU3NTIiLCJpYXQiOjE3ODc5MTg1MTAsImV4cCI6MTc4NzkyMjExMH0.uX4LM8P6dlpRgqDl5puhw7_SqUYtnwxT8YZ_qQgOnaY
 
 ### Create reservation
 POST {{host}}/reservations
@@ -12,7 +12,16 @@ Cookie: Authentication={{token}}
   "startDate": "12/20/2022",
   "endDate": "12/25/2022",
   "placeId": "12345",
-  "invoiceId": "493"
+  "invoiceId": "493",
+  "charge": {
+    "amount": 5,
+    "card": {
+       "cvc": "413",
+       "exp_month": 12,
+       "exp_year": 2027,
+       "number": "4242 4242 4242 4242"
+    }
+  }
 }
 
 ### Get all reservations

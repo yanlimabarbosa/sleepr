@@ -1,61 +1,35 @@
+# Base config — production-safe.
+# Runs the compiled build (production Dockerfile stage), no watch, no debug.
+# Local dev extras (watch, debugger, source volumes) live in
+# docker-compose.override.yml, which `docker compose up` merges automatically.
+# For production, use only this file: `docker compose -f docker-compose.yaml up`.
 services:
   reservations:
     build:
       context: .
       dockerfile: ./apps/reservations/Dockerfile
-      target: development
-    command: sh -c "pnpm install && pnpm run start:dev reservations"
-    environment:
-      - CI=true
-      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+      target: production
     env_file:
       - ./apps/reservations/.env
     ports:
       - '3000:3000'
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
   auth:
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
-      target: development
-    command: sh -c "pnpm install && pnpm run start:dev auth"
-    environment:
-      - CI=true
-      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+      target: production
     env_file:
       - ./apps/auth/.env
     ports:
       - '3001:3001'
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
   payments:
     build:
       context: .
       dockerfile: ./apps/payments/Dockerfile
-      target: development
-    command: sh -c "pnpm install && pnpm run start:dev payments"
-    environment:
-      - CI=true
-      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+      target: production
     env_file:
       - ./apps/payments/.env
     ports:
       - '3003:3003'
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-  # notifications:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/notifications/Dockerfile
-  #     target: development
-  #   command: pnpm run start:dev notifications
-  #   env_file:
-  #     - ./apps/notifications/.env
-  #   volumes:
-  #     - .:/usr/src/app
   mongo:
     image: mongo

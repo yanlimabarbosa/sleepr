@@ -1,0 +1,42 @@
+# Dev-only overrides. `docker compose up` merges this on top of
+# docker-compose.yaml automatically. NEVER used in production.
+# Adds: development image stage, watch mode, the Node inspector (--debug),
+# live source bind-mounts, and runtime pnpm install.
+# Inspector ports: auth 9229, payments 9230, reservations 9231.
+services:
+  reservations:
+    build:
+      target: development
+    command: sh -c "pnpm install && ./node_modules/.bin/nest start --watch reservations --debug 0.0.0.0:9231"
+    environment:
+      - CI=true
+      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+    ports:
+      - '9231:9231'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  auth:
+    build:
+      target: development
+    command: sh -c "pnpm install && ./node_modules/.bin/nest start --watch auth --debug 0.0.0.0:9229"
+    environment:
+      - CI=true
+      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+    ports:
+      - '9229:9229'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  payments:
+    build:
+      target: development
+    command: sh -c "pnpm install && ./node_modules/.bin/nest start --watch payments --debug 0.0.0.0:9230"
+    environment:
+      - CI=true
+      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+    ports:
+      - '9230:9230'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules

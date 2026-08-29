@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
 import { ReservationsRepository } from './reservations.repository';
-import { DatabaseModule, LoggerModule } from '@app/common';
+import {
+  HttpAndRpcExceptionsFilter,
+  DatabaseModule,
+  LoggerModule,
+} from '@app/common';
 import {
   ReservationDocument,
   ReservationSchema,
@@ -11,6 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants/services';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -56,6 +61,10 @@ import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants/services';
     ]),
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, ReservationsRepository],
+  providers: [
+    ReservationsService,
+    ReservationsRepository,
+    { provide: APP_FILTER, useClass: HttpAndRpcExceptionsFilter },
+  ],
 })
 export class ReservationsModule {}

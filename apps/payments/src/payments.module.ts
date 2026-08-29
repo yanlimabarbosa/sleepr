@@ -3,9 +3,10 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
-import { LoggerModule } from '@app/common';
+import { HttpAndRpcExceptionsFilter, LoggerModule } from '@app/common';
 import Stripe from 'stripe';
 import { STRIPE_CLIENT } from './payments.constants';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { STRIPE_CLIENT } from './payments.constants';
         new Stripe(configService.getOrThrow('STRIPE_SECRET_KEY')),
       inject: [ConfigService],
     },
+    { provide: APP_FILTER, useClass: HttpAndRpcExceptionsFilter },
   ],
 })
 export class PaymentsModule {}

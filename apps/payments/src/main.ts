@@ -11,13 +11,17 @@ async function bootstrap() {
 
   const TCP_PORT = configService.getOrThrow<number>('TCP_PORT');
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      host: '0.0.0.0',
-      port: TCP_PORT,
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      transport: Transport.TCP,
+      options: {
+        host: '0.0.0.0',
+        port: TCP_PORT,
+      },
     },
-  });
+    { inheritAppConfig: true },
+  );
+
   app.useLogger(app.get(PinoLogger));
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),

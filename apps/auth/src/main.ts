@@ -10,13 +10,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AuthModule, { bufferLogs: true });
   const configService = app.get(ConfigService);
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      host: '0.0.0.0',
-      port: configService.getOrThrow<number>('TCP_PORT'),
+  app.connectMicroservice<MicroserviceOptions>(
+    {
+      transport: Transport.TCP,
+      options: {
+        host: '0.0.0.0',
+        port: configService.getOrThrow<number>('TCP_PORT'),
+      },
     },
-  });
+    { inheritAppConfig: true },
+  );
+
   app.useLogger(app.get(PinoLogger));
   app.use(cookieParser());
   app.useGlobalPipes(

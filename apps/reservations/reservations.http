@@ -1,7 +1,7 @@
 @host = http://localhost:3000
 @id = 6a764084aef999ea0327305c
 # paste the Authentication token from the auth login response here:
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YThkY2JkMzQxY2ZiMTE4YTFiZDU3NTIiLCJpYXQiOjE3ODc5MTg1MTAsImV4cCI6MTc4NzkyMjExMH0.uX4LM8P6dlpRgqDl5puhw7_SqUYtnwxT8YZ_qQgOnaY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTkzODhhZDE0NjhlZTBmZTIyOWM2NTYiLCJpYXQiOjE3ODgwNTM2NzgsImV4cCI6MTc4ODA1NzI3OH0.SJqxE9DBjIprTD0LNKosiJWY6mNphSo1YQGEHdMBt0k
 
 ### Create reservation
 POST {{host}}/reservations
@@ -9,17 +9,16 @@ Content-Type: application/json
 Cookie: Authentication={{token}}
 
 {
-  "startDate": "12/20/2022",
-  "endDate": "12/25/2022",
-  "placeId": "12345",
-  "invoiceId": "493",
+  "startDate": "02-01-2023",
+  "endDate": "02-05-2023",
+  "placeId": "123",
   "charge": {
     "amount": 5,
     "card": {
-       "cvc": "413",
-       "exp_month": 12,
-       "exp_year": 2027,
-       "number": "4242 4242 4242 4242"
+      "cvc": "413",
+      "exp_month": 12,
+      "exp_year": 2027,
+      "number": "4242 4242 4242 4242"
     }
   }
 }

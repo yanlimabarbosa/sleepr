@@ -10,7 +10,7 @@
       "restart": true,
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/usr/src/app",
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
     },
     {
       "type": "node",
@@ -21,7 +21,7 @@
       "restart": true,
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/usr/src/app",
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
     },
     {
       "type": "node",
@@ -32,7 +32,7 @@
       "restart": true,
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/usr/src/app",
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"]
     }
   ],
   "compounds": [

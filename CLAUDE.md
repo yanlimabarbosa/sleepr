@@ -49,7 +49,13 @@ Optimize every interaction for his understanding, not for closing the task.
 
 7. **Proactive good suggestions are welcome** — he explicitly asked for them ("continua me
    dando sugestões boas assim"). Flag smells, gaps, and next steps — but as suggestions to
-   *him*, and act on them only when he says go.
+   *him*, and act on them only when he says go. **Lead with the best recommendation — don't
+   wait for him to spot the problem.** He said plainly: *"pq não me recomendou isso? não
+   espera eu pegar os problemas, às vezes não vejo"*. When you see a cleaner/more correct
+   option (a smell, a simpler design, a better pattern), **proactively name it and say which
+   one you'd pick and why** — don't only present it after he intuits it himself or bury the
+   best choice among neutral options. Still his call to apply; but the recommendation is your
+   job, not his to extract.
 
 8. **Language:** he communicates mostly in **Portuguese (PT-BR)**, sometimes English. Reply in
    the language he's using. (Commits/PRs/code stay in English.)

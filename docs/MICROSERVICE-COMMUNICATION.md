@@ -77,6 +77,42 @@ justamente um caso onde síncrono se **defende**: tu quer saber na hora se cobro
 **antes** de confirmar a reserva. Event-driven paga quando há muitos serviços,
 alta carga e tolerância a consistência eventual.
 
+## Validação de payload no microservice (gotcha verificado)
+
+**`app.useGlobalPipes()` no `main.ts` NÃO valida `@Payload` de microservice.** Valida
+só `@Body` de HTTP. Isso foi **testado**, não deduzido: mandando um `create_charge`
+corrompido (`{ amount: "abc" }`) direto pro payments por TCP —
+
+- **só com o pipe global (`useGlobalPipes`)** → passou batido e estourou lá no
+  **Stripe** (`Invalid integer: NaN`, `amount * 100 = NaN`). Sem rejeição.
+- **com o pipe via `@Payload(pipe)`, `@UsePipes` ou `APP_PIPE`** → rejeitado antes,
+  `[rpc] BadRequestException`. Nunca chega no Stripe.
+
+Mecanismo (do source `@nestjs/core`/`microservices`): `useGlobalPipes` registra o
+pipe **fora da DI**, na config da instância HTTP; num app **híbrido**
+(`NestFactory.create` + `connectMicroservice`) ele **não entra** no array de pipes
+do handler RPC (`rpc-context-creator` aplica `pipes.concat(paramPipes)` — e o global
+não está em `pipes`). Não é problema de metatype (o metatype existe). É o pipe que
+não está na cadeia.
+
+| forma de registrar | valida `@Body` (HTTP) | valida `@Payload` (RPC) |
+| --- | --- | --- |
+| `app.useGlobalPipes()` | ✅ | ❌ |
+| `@Payload(new ValidationPipe())` | — | ✅ |
+| `@UsePipes(new ValidationPipe())` | ✅ | ✅ |
+| `{ provide: APP_PIPE, useValue: … }` (DI) | ✅ | ✅ |
+
+**Decisão adotada:** `ValidationPipeProvider` (`APP_PIPE`) em `@app/common`,
+registrado nos `providers` dos 4 módulos — mesma mecânica do
+`AllContextsExceptionsFilter` via `APP_FILTER`. Um lugar só, DI-friendly, vale HTTP
+**e** RPC. Removidos todos os `app.useGlobalPipes()` dos `main.ts`.
+
+Por que `APP_PIPE` e não `useGlobalPipes`: a própria doc do Nest trata `APP_PIPE`
+como a forma **DI-friendly** de pipe global (recebe dependências, é testável);
+`useGlobalPipes` fica fora do módulo. Fontes:
+<https://docs.nestjs.com/pipes#global-scoped-pipes>,
+<https://github.com/nestjs/nest/issues/5601> (validação de `@Payload`).
+
 ## Recomendação registrada
 
 1. **Manter `ClientProxy`** — padrão Nest, abstração certa, não trocar.

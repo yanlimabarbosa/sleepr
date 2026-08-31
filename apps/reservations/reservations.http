@@ -1,12 +1,25 @@
+@authHost = http://localhost:3001
 @host = http://localhost:3000
 @id = 6a764084aef999ea0327305c
-# paste the Authentication token from the auth login response here:
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTkzODhhZDE0NjhlZTBmZTIyOWM2NTYiLCJpYXQiOjE3ODgwNTM2NzgsImV4cCI6MTc4ODA1NzI3OH0.SJqxE9DBjIprTD0LNKosiJWY6mNphSo1YQGEHdMBt0k
 
-### Create reservation
+### Login (same file so the Authentication cookie can be chained below)
+# @name login
+POST {{authHost}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "StrongP@ss1"
+}
+
+### Create reservation — reuses the cookie from the login above.
+# Set-Cookie carries `Authentication=<token>; Path=/; ...`; cookie-parser reads
+# the token and ignores the rest. Tip: the cookie jar (rememberCookiesFor-
+# SubsequentRequests, on by default) may already send it since cookies aren't
+# port-scoped — try deleting the Cookie line and see if it still returns 201.
 POST {{host}}/reservations
 Content-Type: application/json
-Cookie: Authentication={{token}}
+Cookie: {{login.response.headers.Set-Cookie}}
 
 {
   "startDate": "02-01-2023",
@@ -25,13 +38,16 @@ Cookie: Authentication={{token}}
 
 ### Get all reservations
 GET {{host}}/reservations
+Cookie: {{login.response.headers.Set-Cookie}}
 
 ### Get one reservation
 GET {{host}}/reservations/{{id}}
+Cookie: {{login.response.headers.Set-Cookie}}
 
 ### Update reservation
 PATCH {{host}}/reservations/{{id}}
 Content-Type: application/json
+Cookie: {{login.response.headers.Set-Cookie}}
 
 {
   "placeId": "67890"
@@ -39,3 +55,4 @@ Content-Type: application/json
 
 ### Delete reservation
 DELETE {{host}}/reservations/{{id}}
+Cookie: {{login.response.headers.Set-Cookie}}

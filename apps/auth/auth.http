@@ -5,7 +5,7 @@ POST {{host}}/users
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "yanbr763@gmail.com",
   "password": "StrongP@ss1"
 }
 
@@ -15,7 +15,7 @@ POST {{host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "yanbr763@gmail.com",
   "password": "StrongP@ss1"
 }
 

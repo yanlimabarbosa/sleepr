@@ -2,7 +2,7 @@
 # docker-compose.yaml automatically. NEVER used in production.
 # Adds: development image stage, watch mode, the Node inspector (--debug),
 # live source bind-mounts, and runtime pnpm install.
-# Inspector ports: auth 9229, payments 9230, reservations 9231.
+# Inspector ports: auth 9229, payments 9230, reservations 9231, notifications 9232.
 services:
   reservations:
     build:
@@ -37,6 +37,18 @@ services:
       - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
     ports:
       - '9230:9230'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  notifications:
+    build:
+      target: development
+    command: sh -c "pnpm install && ./node_modules/.bin/nest start --watch notifications --debug 0.0.0.0:9232"
+    environment:
+      - CI=true
+      - npm_config_store_dir=/usr/src/app/node_modules/.pnpm-store
+    ports:
+      - '9232:9232'
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

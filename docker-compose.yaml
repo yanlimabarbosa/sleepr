@@ -29,7 +29,12 @@ services:
       target: production
     env_file:
       - ./apps/payments/.env
-    ports:
-      - '3003:3003'
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: production
+    env_file:
+      - ./apps/notifications/.env
   mongo:
     image: mongo

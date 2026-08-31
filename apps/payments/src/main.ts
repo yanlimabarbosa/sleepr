@@ -3,7 +3,7 @@ import { PaymentsModule } from './payments.module';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger as PinoLogger } from 'nestjs-pino';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(PaymentsModule, { bufferLogs: true });
@@ -23,10 +23,6 @@ async function bootstrap() {
   );
 
   app.useLogger(app.get(PinoLogger));
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
-  );
-
   await app.startAllMicroservices();
 
   Logger.log(`payments service running on port ${TCP_PORT}`);

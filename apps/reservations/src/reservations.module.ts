@@ -3,9 +3,10 @@ import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
 import { ReservationsRepository } from './reservations.repository';
 import {
-  HttpAndRpcExceptionsFilter,
+  AllContextsExceptionsFilter,
   DatabaseModule,
   LoggerModule,
+  ValidationPipeProvider,
 } from '@app/common';
 import {
   ReservationDocument,
@@ -64,7 +65,8 @@ import { APP_FILTER } from '@nestjs/core';
   providers: [
     ReservationsService,
     ReservationsRepository,
-    { provide: APP_FILTER, useClass: HttpAndRpcExceptionsFilter },
+    { provide: APP_FILTER, useClass: AllContextsExceptionsFilter },
+    ValidationPipeProvider,
   ],
 })
 export class ReservationsModule {}

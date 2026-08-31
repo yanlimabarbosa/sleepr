@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from './users/users.module';
-import { HttpAndRpcExceptionsFilter, LoggerModule } from '@app/common';
+import {
+  AllContextsExceptionsFilter,
+  LoggerModule,
+  ValidationPipeProvider,
+} from '@app/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
@@ -39,7 +43,8 @@ import { APP_FILTER } from '@nestjs/core';
     AuthService,
     LocalStrategy,
     JwtStrategy,
-    { provide: APP_FILTER, useClass: HttpAndRpcExceptionsFilter },
+    { provide: APP_FILTER, useClass: AllContextsExceptionsFilter },
+    ValidationPipeProvider,
   ],
 })
 export class AuthModule {}

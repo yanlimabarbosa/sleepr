@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AuthModule } from './auth.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger as PinoLogger } from 'nestjs-pino';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -23,10 +23,6 @@ async function bootstrap() {
 
   app.useLogger(app.get(PinoLogger));
   app.use(cookieParser());
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
-  );
-
   await app.startAllMicroservices();
 
   const port = configService.getOrThrow<number>('HTTP_PORT');

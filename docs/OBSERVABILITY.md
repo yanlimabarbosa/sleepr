@@ -13,11 +13,13 @@ com **Pino** (`nestjs-pino`), estruturado, via `LoggerModule` em `libs/common`.
   `statusCode`; erro loga `type + message + stack`.
 - **Redação de sensíveis**: `req.body.password` e `req.headers.authorization`
   saem como `***`.
-- **Log de exceção nas fronteiras HTTP e RPC**: `HttpAndRpcExceptionsFilter` e
-  `RpcOnlyExceptionsFilter` (`libs/common/src/filters/`) logam o erro **no serviço
-  que o gerou** — resolve a cegueira do microservice (RPC não loga exceção por
-  padrão) e diferencia contexto com prefixo `[http]`/`[rpc]`. Registrados via
-  `APP_FILTER` + `inheritAppConfig` para valerem também no contexto TCP.
+- **Log de exceção nas fronteiras HTTP e RPC**: `AllContextsExceptionsFilter`
+  (`libs/common/src/filters/`) loga o erro **no serviço que o gerou** — resolve a
+  cegueira do microservice (RPC não loga exceção por padrão) e diferencia contexto
+  com prefixo `[http]`/`[rpc]`. Um único filtro cobre TCP-only, HTTP-only e hybrid:
+  roteia por `host.getType()` e monta o delegate HTTP só quando há `httpAdapter`
+  (composição, não herança — nunca IS-A filtro HTTP). Registrado via `APP_FILTER`
+  (DI injeta o `HttpAdapterHost`) + `inheritAppConfig` para valer também no TCP.
 - **Debugger multi-serviço (dev)**: `--inspect` por serviço no override do compose
   (portas 9229/9230/9231) + `.vscode/launch.json` com compound "all services".
 
@@ -89,9 +91,9 @@ Terceiro pilar (logs, metrics, traces):
   pino-http (não logar as rotas de health).
 - Nota: hoje os 3 serviços são hybrid ou HTTP (`NestFactory.create`), então têm
   adapter HTTP e um `/health` funciona em todos. Se algum virar microservice puro
-  (`createMicroservice`, sem HTTP) — como o `RpcOnlyExceptionsFilter` já prevê —
-  aí probe HTTP não se aplica: usar TCP check na porta ou uma casca HTTP mínima
-  só para `/health`.
+  (`createMicroservice`, sem HTTP) — caso que o `AllContextsExceptionsFilter` já
+  cobre (sem `httpAdapter` ele só usa o path RPC) — aí probe HTTP não se aplica:
+  usar TCP check na porta ou uma casca HTTP mínima só para `/health`.
 
 ### 7. Error tracking (o "debugger passivo" de produção)
 
@@ -114,6 +116,40 @@ Métrica sem alerta é gráfico bonito que ninguém olha na hora do incidente.
   objetivos; alertar por **burn rate** do error budget, não por threshold seco.
 - Método **RED** (Rate, Errors, Duration) por serviço e **USE** (Utilization,
   Saturation, Errors) por recurso — bom ponto de partida para o que medir.
+
+### 9. Logging estruturado de eventos de domínio (padronizar em toda a app)
+
+Hoje só o **infra logging** é padronizado (req/res/exceção, via `LoggerModule` +
+filtro). Os **eventos de negócio** ainda quase não são logados — o primeiro é o
+`notifications.service` (`this.logger.info({ messageId, to }, 'email sent')`), que
+serve de **semente do padrão**. Falta replicar isso, de forma consistente, nos
+momentos que importam: `user registered`, `login succeeded/failed`, `reservation
+created`, `charge succeeded/failed`, `email sent`.
+
+Regras do padrão (para não virar `console.log` espalhado nem log obeso):
+
+- **Logger injetado por serviço**: `@InjectPinoLogger(Service.name)` +
+  `private readonly logger: PinoLogger` — nunca `console.log`. (Cuidado com o
+  gotcha ES2023: injetar/usar no constructor ou método, **não** em field initializer.)
+- **Happy-path enxuto**: só o essencial numa linha (ex.: `email sent` →
+  `{ messageId, to }`). Detalhe verboso (resposta crua do SMTP, payload inteiro)
+  vai para `this.logger.debug(...)`, que fica **desligado em prod**.
+- **Correlation / business ids em todo evento**: `reservationId`, `userId`,
+  `x-request-id`. É o que liga os logs de N serviços a **uma** operação — casa com
+  o item 5 (correlation ID) e o item 3 (tracing). Sem isso, cada log é uma ilha.
+  Exige **threadar o id pelo payload** dos eventos RPC (o TCP não carrega headers).
+- **Nível certo**: sucesso operacional → `info`; falha → `warn`/`error` (já vem do
+  filtro). Não logar sucesso em `info` se o volume for altíssimo — aí `debug` +
+  só falhas em `warn`.
+- **PII**: `to` (email), CPF, etc. são dado pessoal. Manter (necessidade
+  operacional) **ou** redigir/hashear conforme política — consistente com o
+  `redact` que já existe no `LoggerModule`. Não deixar inconsistente entre serviços.
+- **Mesma chave para o mesmo conceito** entre serviços (`userId` em todos, não
+  `user_id` num e `uid` noutro) — senão a query no agregador vira inferno.
+
+Meta: um `grep`/filtro no agregador por `reservationId` mostrar a **história
+completa** daquela reserva atravessando auth → reservations → payments →
+notifications, em ordem, sem adivinhação.
 
 ## Debugging: local vs produção (metodologia)
 
